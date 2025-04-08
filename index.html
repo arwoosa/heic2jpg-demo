@@ -50,17 +50,23 @@
             preview.style.display = 'none';
 
             try {
-                // 轉換 HEIC 到 JPEG
-                const jpegBlob = await heic2any({
+                if (file.type === 'image/heic') {
+                    // 轉換 HEIC 到 JPEG
+                    const jpegBlob = await heic2any({
                     blob: file,
                     toType: "image/jpeg",
                     quality: 0.8
-                });
+                    });
 
-                // 創建預覽 URL
-                const imageUrl = URL.createObjectURL(jpegBlob);
-                preview.src = imageUrl;
-                preview.style.display = 'block';
+                    // 創建預覽 URL
+                    const imageUrl = URL.createObjectURL(jpegBlob);
+                    preview.src = imageUrl;
+                    preview.style.display = 'block';
+                } else {
+                    // Use original file if not HEIC
+                    preview.src = URL.createObjectURL(file);
+                    preview.style.display = 'block';
+                }
             } catch (error) {
                 alert('轉換過程發生錯誤：' + error.message);
             } finally {
