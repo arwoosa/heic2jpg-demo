@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HEIC 轉換器</title>
+    <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .upload-container {
+            text-align: center;
+            padding: 20px;
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        #preview {
+            max-width: 100%;
+            margin-top: 20px;
+        }
+        .loading {
+            display: none;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="upload-container">
+        <h2>HEIC 圖片轉換器</h2>
+        <p>請選擇 HEIC 格式的圖片</p>
+        <input type="file" id="fileInput" accept=".heic,.HEIC">
+        <div class="loading" id="loading">轉換中...</div>
+    </div>
+    <img id="preview" style="display: none;">
+
+    <script>
+        document.getElementById('fileInput').addEventListener('change', async function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const loading = document.getElementById('loading');
+            const preview = document.getElementById('preview');
+            
+            loading.style.display = 'block';
+            preview.style.display = 'none';
+
+            try {
+                // 轉換 HEIC 到 JPEG
+                const jpegBlob = await heic2any({
+                    blob: file,
+                    toType: "image/jpeg",
+                    quality: 0.8
+                });
+
+                // 創建預覽 URL
+                const imageUrl = URL.createObjectURL(jpegBlob);
+                preview.src = imageUrl;
+                preview.style.display = 'block';
+            } catch (error) {
+                alert('轉換過程發生錯誤：' + error.message);
+            } finally {
+                loading.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html> 

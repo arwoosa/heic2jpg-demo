@@ -1,0 +1,10 @@
+services:
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./index.html:/usr/share/nginx/html/index.html:ro
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.heic2jpg.rule=Host(`heic2jpg-dev.oosa.life`)"
+      - "traefik.http.routers.heic2jpg.service=heic2jpg"
+      - "traefik.http.services.heic2jpg.loadbalancer.server.port=80"
